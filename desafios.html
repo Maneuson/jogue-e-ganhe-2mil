@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio tops</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #game {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #hidden-hearts {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #d3e5ff;
+            border: 2px dashed #007bff;
+            margin-bottom: 20px;
+        }
+
+        .heart {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://i.imgur.com/6qYCrhp.png') no-repeat center center;
+            background-size: cover;
+            cursor: pointer;
+        }
+
+        #memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .memory-card {
+            width: 100px;
+            height: 100px;
+            background: url('https://via.placeholder.com/100x100?text=Olhar') no-repeat center center; 
+            background-size: cover;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .memory-card img {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .memory-card.flipped {
+            background: none;
+        }
+
+        .memory-card.flipped img {
+            display: block;
+        }
+
+        #quiz-questions {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        #drag-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            background: #eee;
+            border: 1px dashed #ccc;
+        }
+
+        .draggable {
+            width: 50px;
+            height: 50px;
+            background: url('https://i.imgur.com/9EUJLvW.png') no-repeat center center;
+            background-size: cover;
+            position: absolute;
+            cursor: move;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <h1>Olá meu bem ❤️ Faz os desafios ai, que no final tem recompensa...</h1>
+        <div id="task-container">
+            <!-- Desafio 1: Encontre os Corações -->
+            <div id="heart-finder">
+                <p>Encontre todos os corações escondidos!</p>
+                <div id="hidden-hearts">
+                    <div class="heart" style="top: 50px; left: 100px;"></div>
+                    <div class="heart" style="top: 100px; left: 250px;"></div>
+                    <div class="heart" style="top: 200px; left: 400px;"></div>
+                </div>
+            </div>
+
+            <!-- Desafio 2: Jogo da Memória -->
+            <div id="memory-game" style="display:none;">
+                <p>Jogo da Memória: Encontre os pares!</p>
+                <div id="memory-board">
+                    <div class="memory-card" data-match="1">
+                        <img src="https://i.imgur.com/CXqYQZ3.png" alt="Imagem 1">
+                    </div>
+                    <div class="memory-card" data-match="2">
+                        <img src="https://i.imgur.com/bjmnxPK.png" alt="Imagem 2">
+                    </div>
+                    <div class="memory-card" data-match="1">
+                        <img src="https://i.imgur.com/CXqYQZ3.png" alt="Imagem 1">
+                    </div>
+                    <div class="memory-card" data-match="2">
+                        <img src="https://i.imgur.com/bjmnxPK.png" alt="Imagem 2">
+                    </div>
+                    <div class="memory-card" data-match="3">
+                        <img src="https://i.imgur.com/72kCx7x.jpeg" alt="Imagem 3">
+                    </div>
+                    <div class="memory-card" data-match="3">
+                        <img src="https://i.imgur.com/72kCx7x.jpeg" alt="Imagem 3">
+                    </div>
+                    <div class="memory-card" data-match="4">
+                        <img src="https://i.imgur.com/DgpRbsL.png" alt="Imagem 4">
+                    </div>
+                    <div class="memory-card" data-match="4">
+                        <img src="https://i.imgur.com/DgpRbsL.png" alt="Imagem 4">
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- Desafio 3: Quiz -->
+            <div id="quiz" style="display:none;">
+                <div id="quiz">
+                    <div id="quiz-questions">
+                        <div class="quiz-question">
+                            <p>Pergunta 1: Qual é a cor do céu?</p>
+                            <button class="quiz-answer" data-correct="true">Azul</button>
+                            <button class="quiz-answer" data-correct="false">Verde</button>
+                            <button class="quiz-answer" data-correct="false">Vermelho</button>
+                        </div>
+                        <div class="quiz-question" style="display:none;">
+                            <p>Pergunta 2: Quantos dias tem um ano bissexto?</p>
+                            <button class="quiz-answer" data-correct="true">366</button>
+                            <button class="quiz-answer" data-correct="false">365</button>
+                            <button class="quiz-answer" data-correct="false">364</button>
+                        </div>
+                        <div class="quiz-question" style="display:none;">
+                            <p>Pergunta 3: Qual é o maior planeta do Sistema Solar?</p>
+                            <button class="quiz-answer" data-correct="true">Júpiter</button>
+                            <button class="quiz-answer" data-correct="false">Marte</button>
+                            <button class="quiz-answer" data-correct="false">Saturno</button>
+                        </div>
+                        <div class="quiz-question" style="display:none;">
+                            <p>Pergunta 4: Qual é a capital do Brasil?</p>
+                            <button class="quiz-answer" data-correct="true">Brasília</button>
+                            <button class="quiz-answer" data-correct="false">Rio de Janeiro</button>
+                            <button class="quiz-answer" data-correct="false">São Paulo</button>
+                        </div>
+                        <div class="quiz-question" style="display:none;">
+                            <p>Pergunta 5: Qual chocolate eu gosto mais?</p>
+                            <button class="quiz-answer" data-correct="true">Branco</button>
+                            <button class="quiz-answer" data-correct="false">Preto</button>
+                            <button class="quiz-answer" data-correct="false">Meio Amargo</button>
+                        </div>
+                    </div>
+                </div>
+                
+
+            <!-- Desafio 4: Arrastar e Soltar -->
+            <div id="drag-and-drop" style="display:none;">
+                <p>Desafio de Arrastar e Soltar!</p>
+                <div id="drag-container">
+                    <div class="draggable" id="item1" draggable="true" style="top: 50px; left: 50px;"></div>
+                    <div class="draggable" id="item2" draggable="true" style="top: 150px; left: 200px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="message" style="display:none;">
+            <h1>Quer namorar comigo?</h1>
+            <button id="yes">Sim</button>
+            <button id="no">Não</button>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentTask = 'heart-finder';
+    let heartsFound = 0;
+    let firstCard = null;
+    let lockBoard = false;
+    let matchedPairs = 0;
+    const totalPairs = 4; 
+
+    function showTask(taskId) {
+        document.querySelectorAll('#task-container > div').forEach(div => {
+            div.style.display = div.id === taskId ? 'block' : 'none';
+        });
+    }
+
+    function completeTask() {
+        if (currentTask === 'heart-finder') {
+            currentTask = 'memory-game';
+        } else if (currentTask === 'memory-game') {
+            currentTask = 'quiz';
+        } else if (currentTask === 'quiz') {
+            currentTask = 'drag-and-drop'; 
+        } else if (currentTask === 'drag-and-drop') {
+            document.getElementById('message').style.display = 'block';
+            return;
+        }
+        showTask(currentTask);
+    }
+
+    // Desafio 1: Encontre o Coração
+    const hearts = document.querySelectorAll('#hidden-hearts .heart');
+    hearts.forEach(heart => {
+        heart.addEventListener('click', function() {
+            this.style.display = 'none'; 
+            heartsFound++;
+            if (heartsFound === 3) {
+                completeTask(); 
+            }
+        });
+    });
+
+    // Desafio 2: Jogo da Memória
+    const cards = document.querySelectorAll('#memory-board .memory-card');
+
+    function checkMatch() {
+        if (matchedPairs === totalPairs) {
+            completeTask();
+        }
+    }
+
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            if (lockBoard || this === firstCard || this.classList.contains('flipped')) return;
+            this.classList.add('flipped'); 
+            if (!firstCard) {
+                firstCard = this;
+            } else {
+                if (firstCard.dataset.match === this.dataset.match) {
+                    matchedPairs++;
+                    firstCard = null;
+                    checkMatch();
+                } else {
+                    lockBoard = true;
+                    setTimeout(() => {
+                        firstCard.classList.remove('flipped');
+                        this.classList.remove('flipped');
+                        firstCard = null;
+                        lockBoard = false;
+                    }, 1000);
+                }
+            }
+        });
+    });
+
+    // Desafio 3: Quiz
+    let currentQuestion = 0;
+    const quizQuestions = document.querySelectorAll('.quiz-question');
+    const quizAnswers = document.querySelectorAll('#quiz-questions .quiz-answer');
+
+    quizAnswers.forEach(answer => {
+        answer.addEventListener('click', function() {
+            if (this.dataset.correct === 'true') {
+                quizQuestions[currentQuestion].style.display = 'none'; 
+                currentQuestion++;
+                
+                if (this.innerText === "Branco") {
+                    currentTask = 'drag-and-drop';
+                    completeTask();
+                } else if (currentQuestion < quizQuestions.length) {
+                    quizQuestions[currentQuestion].style.display = 'block'; 
+                } else {
+                    completeTask(); 
+                }
+            } else {
+                alert('Resposta incorreta. Tente novamente!');
+            }
+        });
+    });
+
+    // Desafio 4: Arrastar e Soltar
+    const dragItems = document.querySelectorAll('#drag-container .draggable');
+
+    function checkDragAndDrop() {
+        const allItemsCorrect = Array.from(dragItems).every(item => {
+            const rect = item.getBoundingClientRect();
+            return rect.top >= 50 && rect.left >= 50;
+        });
+        if (allItemsCorrect) {
+            completeTask(); 
+        }
+    }
+
+    dragItems.forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('text/plain', item.id);
+        });
+    });
+
+    document.getElementById('drag-container').addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
+
+    document.getElementById('drag-container').addEventListener('drop', function(e) {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text');
+        const draggable = document.getElementById(id);
+        draggable.style.position = 'absolute';
+        draggable.style.top = `${e.clientY - 25}px`;
+        draggable.style.left = `${e.clientX - 25}px`;
+        checkDragAndDrop();
+    });
+
+    showTask(currentTask);
+
+    document.getElementById('yes').addEventListener('click', function() {
+        alert('Que ótimo! Fico muito feliz que você aceitou.');
+        location.href = "https://music.youtube.com/watch?v=izGwDsrQ1eQ";
+    });
+
+    document.getElementById('no').addEventListener('click', function() {
+        alert('Entendo, sem problemas. Mas tem certeza?');
+    });
+});
+
+    </script>
+</body>
+</html>
